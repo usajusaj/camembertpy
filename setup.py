@@ -1,4 +1,5 @@
 import os
+import sys
 from distutils.core import setup
 from distutils.extension import Extension
 
@@ -30,9 +31,10 @@ setup(
             ],
             include_dirs=[
                 BRI,
+                os.path.join(sys.prefix, 'include')
             ],
             libraries=['hts'],
-            extra_compile_args=[],
+            extra_compile_args=['-O3'],
             extra_link_args=['-D_FILE_OFFSET_BITS=64']
         ),
     ]),

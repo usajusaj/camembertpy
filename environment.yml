@@ -1,0 +1,9 @@
+name: camembert
+channels:
+  - defaults
+  - bioconda
+dependencies:
+  - pysam
+  - cython
+  - htslib
+  - gcc_linux-64
