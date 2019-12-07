@@ -77,9 +77,13 @@ cdef class Bri:
 
     # noinspection PyAttributeOutsideInit
     def load(self):
-        """ Load the index from .bri file """
+        """ Load the index from .bri file
+        Returns:
+            Bri: useful for chaining function calls
+        """
         self.index = _load_index(self.input_bam_path)
         self.hts = AlignmentFile(self.input_bam_path, 'rb')
+        return self
 
     def get(self, read_name):
         """ Get reads for read_name from the bam file using .bri index
