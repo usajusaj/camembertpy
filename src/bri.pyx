@@ -110,3 +110,8 @@ cdef class Bri:
 
     def __del__(self):
         bam_read_idx_destroy(self.index)
+
+
+__all__ = [
+    'Bri'
+]
