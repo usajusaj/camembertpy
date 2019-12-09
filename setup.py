@@ -1,25 +1,61 @@
 import os
 import sys
-from distutils.core import setup
-from distutils.extension import Extension
 
+import pysam
 from Cython.Build import cythonize
 from Cython.Distutils import build_ext
+from setuptools import setup, Extension
 
 ROOT = os.path.dirname(__file__)
 BRI = os.path.join(ROOT, 'src/bri/src')
 
+with open(os.path.join(ROOT, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name="camembert",
     packages=["camembert"],
-    version='0.0.1',
-    description='Python interface to bri',
+    version='0.0.1a1',
+    description='Python interface to BRI (Bam Read Index)',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Matej Usaj',
     author_email='m.usaj@utoronto.ca',
-    # url='https://github.com/usajusaj/segmentation',
-    # download_url='https://github.com/usajusaj/segmentation/archive/master.zip',
-    # keywords=['mixture', 'model', 'segmentation'],
-    # classifiers=[],
+    url='https://github.com/usajusaj/camembertpy',
+    download_url='https://github.com/usajusaj/camembertpy/archive/master.zip',
+
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+
+        'License :: OSI Approved :: MIT License',
+
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+    ],
+
+    keywords='bri samtools htslib read index',
+    setup_requires=[
+        'cython',
+        'pysam'
+    ],
+    install_requires=[
+        'pysam'
+    ],
+
+    entry_points={
+        'console_scripts': [
+            'camembert=camembert.cli:main',
+        ],
+    },
+
     cmdclass={"build_ext": build_ext},
     ext_modules=cythonize([
         Extension(
@@ -29,13 +65,13 @@ setup(
                 os.path.join(BRI, 'bri_index.c'),
                 os.path.join(BRI, 'bri_get.c')
             ],
-            include_dirs=[
+            include_dirs=pysam.get_include() + [
                 BRI,
                 os.path.join(sys.prefix, 'include')
             ],
-            libraries=['hts'],
+            extra_link_args=pysam.get_libraries(),
+            define_macros=pysam.get_defines(),
             extra_compile_args=['-O3'],
-            extra_link_args=['-D_FILE_OFFSET_BITS=64']
-        ),
-    ]),
+        )
+    ])
 )
