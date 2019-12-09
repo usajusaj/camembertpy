@@ -1,11 +1,10 @@
 import os
 import sys
-from distutils.core import setup
-from distutils.extension import Extension
 
 import pysam
 from Cython.Build import cythonize
 from Cython.Distutils import build_ext
+from setuptools import setup, Extension
 
 ROOT = os.path.dirname(__file__)
 BRI = os.path.join(ROOT, 'src/bri/src')
@@ -21,7 +20,7 @@ setup(
     download_url='https://github.com/usajusaj/camembertpy/archive/master.zip',
     keywords=['bri'],
     cmdclass={"build_ext": build_ext},
-    install_requires=[
+    setup_requires=[
         'cython',
         'pysam'
     ],
@@ -40,6 +39,6 @@ setup(
             extra_link_args=pysam.get_libraries(),
             define_macros=pysam.get_defines(),
             extra_compile_args=['-O3'],
-        ),
-    ]),
+        )
+    ])
 )
