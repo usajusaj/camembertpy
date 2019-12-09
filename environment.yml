@@ -5,5 +5,4 @@ channels:
 dependencies:
   - pysam
   - cython
-#  - htslib
   - gcc_linux-64

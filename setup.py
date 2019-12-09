@@ -9,21 +9,54 @@ from setuptools import setup, Extension
 ROOT = os.path.dirname(__file__)
 BRI = os.path.join(ROOT, 'src/bri/src')
 
+with open(os.path.join(ROOT, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name="camembert",
     packages=["camembert"],
-    version='0.0.1',
+    version='0.0.1a1',
     description='Python interface to bri',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Matej Usaj',
     author_email='m.usaj@utoronto.ca',
     url='https://github.com/usajusaj/camembertpy',
     download_url='https://github.com/usajusaj/camembertpy/archive/master.zip',
-    keywords=['bri'],
-    cmdclass={"build_ext": build_ext},
+
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+
+        'Intended Audience :: Science/Research',
+        'Topic :: Scientific/Engineering :: Bio-Informatics',
+
+        'License :: OSI Approved :: MIT License',
+
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+    ],
+
+    keywords='bri samtools htslib read index',
     setup_requires=[
         'cython',
         'pysam'
     ],
+    install_requires=[
+        'pysam'
+    ],
+
+    # entry_points={  # Optional
+    #     'console_scripts': [
+    #         'sample=sample:main',
+    #     ],
+    # },
+
+    cmdclass={"build_ext": build_ext},
     ext_modules=cythonize([
         Extension(
             name="camembert.bri",
