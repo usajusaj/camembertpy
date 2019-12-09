@@ -1,6 +1,6 @@
 # camembertpy
 
-Cython wrapper around https://github.com/jts/bri with pysam integration
+Cython wrapper for https://github.com/jts/bri with pysam integration.
 
 # Installation
 ## From source
@@ -15,8 +15,9 @@ python setup.py install
 # optional virtualenv:
 virtualenv camembert
 source camembert/bin/activate
-# 
-pip install cython pysam
+
+# Installation
+pip install -r requirements.txt
 python setup.py install
 ```
 
@@ -37,4 +38,19 @@ b.load()
 for read in b.get(read_name):
     print(read.to_string())  # read is of type pysam.AligmentSegment
 ```
+## CLI
+A command line interface is included and mimics the original bri CLI command. For usage, refer to
+```bash
+camembert --help
+camembert <subcommand> --help
+```
 
+### build read index
+```bash
+camembert i bam_file.bam
+```
+
+### retrieve reads
+```bash
+camembert g bam_file.bam read_name
+```

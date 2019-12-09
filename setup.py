@@ -16,7 +16,7 @@ setup(
     name="camembert",
     packages=["camembert"],
     version='0.0.1a1',
-    description='Python interface to bri',
+    description='Python interface to BRI (Bam Read Index)',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Matej Usaj',
@@ -50,11 +50,11 @@ setup(
         'pysam'
     ],
 
-    # entry_points={  # Optional
-    #     'console_scripts': [
-    #         'sample=sample:main',
-    #     ],
-    # },
+    entry_points={
+        'console_scripts': [
+            'camembert=camembert.cli:main',
+        ],
+    },
 
     cmdclass={"build_ext": build_ext},
     ext_modules=cythonize([
