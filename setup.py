@@ -3,6 +3,7 @@ import sys
 from distutils.core import setup
 from distutils.extension import Extension
 
+import pysam
 from Cython.Build import cythonize
 from Cython.Distutils import build_ext
 
@@ -16,11 +17,14 @@ setup(
     description='Python interface to bri',
     author='Matej Usaj',
     author_email='m.usaj@utoronto.ca',
-    # url='https://github.com/usajusaj/segmentation',
-    # download_url='https://github.com/usajusaj/segmentation/archive/master.zip',
-    # keywords=['mixture', 'model', 'segmentation'],
-    # classifiers=[],
+    url='https://github.com/usajusaj/camembertpy',
+    download_url='https://github.com/usajusaj/camembertpy/archive/master.zip',
+    keywords=['bri'],
     cmdclass={"build_ext": build_ext},
+    install_requires=[
+        'cython',
+        'pysam'
+    ],
     ext_modules=cythonize([
         Extension(
             name="camembert.bri",
@@ -29,13 +33,13 @@ setup(
                 os.path.join(BRI, 'bri_index.c'),
                 os.path.join(BRI, 'bri_get.c')
             ],
-            include_dirs=[
+            include_dirs=pysam.get_include() + [
                 BRI,
                 os.path.join(sys.prefix, 'include')
             ],
-            libraries=['hts'],
+            extra_link_args=pysam.get_libraries(),
+            define_macros=pysam.get_defines(),
             extra_compile_args=['-O3'],
-            extra_link_args=['-D_FILE_OFFSET_BITS=64']
         ),
     ]),
 )
