@@ -1,6 +1,9 @@
 #cython: language_level=3
 
 from pysam import AlignmentFile
+import os
+
+__all__ = ['Bri']
 
 """
     Expose bare minimum from jts/bri headers
@@ -12,40 +15,15 @@ cdef extern from "bri_index.h":
     struct bam_read_idx:
         bam_read_idx_record* records
 
-    bam_read_idx* bam_read_idx_load(const char* input_bam)
-    bam_read_idx* bam_read_idx_build(const char* input_bam)
-    void bam_read_idx_save(bam_read_idx* bri, const char* filename)
+    bam_read_idx*bam_read_idx_load(const char* input_bam)
+    void bam_read_idx_build(const char* input_bam)
     void bam_read_idx_destroy(bam_read_idx* bri)
 
 cdef extern from "bri_get.h":
-    void bam_read_idx_get_range(const bam_read_idx* bri,
-                            const char* readname,
-                            bam_read_idx_record** start,
-                            bam_read_idx_record** end)
-    int bam_read_idx_get_main(int argc, char** argv)
-
-cdef bam_read_idx* _build_index(in_path, out_path):
-    """ Create bri index from bam file
-    Args:
-        in_path (bytes): path to bam file
-        out_path (bytes): path to bri file
-    Returns:
-        bam_read_idx*: built index 
-    """
-    cdef bam_read_idx* bri = bam_read_idx_build(in_path)
-    bam_read_idx_save(bri, out_path)
-    return bri
-
-
-cdef bam_read_idx* _load_index(in_path):
-    """ Read existing bri index
-    Args:
-        in_path (bytes): path to bam file. bri extension is automatically added
-    Returns:
-        bam_read_idx*: loaded index 
-    """
-    return bam_read_idx_load(in_path)
-
+    void bam_read_idx_get_range(const bam_read_idx*bri,
+                                const char*readname,
+                                bam_read_idx_record** start,
+                                bam_read_idx_record** end)
 
 cdef class Bri:
     """ Wrapper class for Jared's bri, supports creating and reading .bri index and extracting reads using pysam
@@ -57,7 +35,7 @@ cdef class Bri:
         hts (pysam.AlignmentFile): Bam file instance
     """
     cdef:
-        bam_read_idx* index
+        bam_read_idx*index
         object hts
         bytes input_bam_path
         bytes input_bri_path
@@ -70,22 +48,24 @@ cdef class Bri:
         self.input_bam_path = input_bam.encode('utf-8')
         self.input_bri_path = (input_bam + '.bri').encode('utf-8')
 
+        if not os.path.exists(self.input_bam_path):
+            raise ValueError("Bam file does not exist")
+
     def create(self):
         """ Create bri index for bam file by calling bam_read_idx_build and bam_read_idx_save. Index is immediately
-        destroyed to prevent segfaulting
+        destroyed, call load() after this to recycle this object.
         """
-        index = _build_index(self.input_bam_path, self.input_bri_path)
-        bam_read_idx_destroy(index)
+        bam_read_idx_build(self.input_bam_path)
 
     # noinspection PyAttributeOutsideInit
     def load(self):
-        """ Load the index from .bri file
-        Returns:
-            Bri: useful for chaining function calls
-        """
-        self.index = _load_index(self.input_bam_path)
-        self.hts = AlignmentFile(self.input_bam_path, 'rb')
-        return self
+        """ Load the index from .bri file """
+        if not os.path.exists(self.input_bri_path):
+            # Avoid exit() calls in bri_index.c
+            raise FileNotFoundError("Bri file does not exist")
+
+        self.index = bam_read_idx_load(self.input_bam_path)  # load .bri index
+        self.hts = AlignmentFile(self.input_bam_path, 'rb')  # load .bam file
 
     def get(self, read_name):
         """ Get reads for read_name from the bam file using .bri index
@@ -94,9 +74,12 @@ cdef class Bri:
         Yields:
             pysam.AlignedSegment: found reads
         """
+        if not self.index:
+            raise ValueError('Bri index is not loaded, call load() function first')
+
         cdef:
-            bam_read_idx_record* start
-            bam_read_idx_record* end
+            bam_read_idx_record*start
+            bam_read_idx_record*end
 
         bam_read_idx_get_range(self.index, read_name.encode('utf-8'), &start, &end)
 
@@ -108,10 +91,9 @@ cdef class Bri:
             yield read
             start += 1
 
-    def __del__(self):
-        bam_read_idx_destroy(self.index)
-
-
-__all__ = [
-    'Bri'
-]
+    def __dealloc__(self):
+        """ Proper cleanup """
+        if self.index:
+            bam_read_idx_destroy(self.index)
+        if self.hts:
+            self.hts.close()
