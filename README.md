@@ -47,10 +47,10 @@ camembert <subcommand> --help
 
 ### build read index
 ```bash
-camembert i bam_file.bam
+camembert index bam_file.bam
 ```
 
 ### retrieve reads
 ```bash
-camembert g bam_file.bam read_name
+camembert get bam_file.bam read_name
 ```

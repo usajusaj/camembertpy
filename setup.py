@@ -1,4 +1,5 @@
 import os
+import io
 import sys
 
 import pysam
@@ -17,7 +18,7 @@ def get_version():
     return version.__version__
 
 
-with open(os.path.join(ROOT, 'README.md'), encoding='utf-8') as f:
+with io.open(os.path.join(ROOT, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
