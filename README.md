@@ -25,15 +25,15 @@ python setup.py install
 ## API
 ### build read index
 ```python
-import bri
-b = bri.Bri(bam_file)
+from camembert import Bri
+b = Bri(bam_file)
 b.create()
 ```
 
 ### retrieve reads
 ```python
-import bri
-b = bri.Bri(bam_file)
+from camembert import Bri
+b = Bri(bam_file)
 b.load()
 for read in b.get(read_name):
     print(read.to_string())  # read is of type pysam.AligmentSegment
