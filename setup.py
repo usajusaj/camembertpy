@@ -33,7 +33,7 @@ setup(
     download_url='https://github.com/usajusaj/camembertpy/archive/master.zip',
 
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 3 - Beta',
 
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
