@@ -1,13 +1,13 @@
-from camembert import bri
+from camembert import Bri
 
 
 def create_index(args):
-    b = bri.Bri(args.bam_file)
+    b = Bri(args.bam_file)
     b.create()
 
 
 def get_read(args):
-    b = bri.Bri(args.bam_file)
+    b = Bri(args.bam_file)
     b.load()
     for read in b.get(args.read_name):
         print(read.to_string())
