@@ -10,6 +10,8 @@ from setuptools import setup, Extension
 ROOT = os.path.dirname(__file__)
 BRI = os.path.join(ROOT, 'src/bri/src')
 
+CFLAGS = ['-O3', '-std=c99']
+
 
 def get_version():
     # Borrowed this method from pysam
@@ -78,9 +80,9 @@ setup(
                 BRI,
                 os.path.join(sys.prefix, 'include')
             ],
-            extra_link_args=pysam.get_libraries(),
+            extra_link_args=pysam.get_libraries() + CFLAGS,
             define_macros=pysam.get_defines(),
-            extra_compile_args=['-O3'],
+            extra_compile_args=CFLAGS
         )
     ])
 )
