@@ -9,13 +9,21 @@ from setuptools import setup, Extension
 ROOT = os.path.dirname(__file__)
 BRI = os.path.join(ROOT, 'src/bri/src')
 
+
+def get_version():
+    # Borrowed this method from pysam
+    sys.path.insert(0, "camembert")
+    import version
+    return version.__version__
+
+
 with open(os.path.join(ROOT, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name="camembert",
     packages=["camembert"],
-    version='0.0.1a1',
+    version=get_version(),
     description='Python interface to BRI (Bam Read Index)',
     long_description=long_description,
     long_description_content_type='text/markdown',
