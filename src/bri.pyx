@@ -49,7 +49,7 @@ cdef class Bri:
         self.input_bri_path = (input_bam + '.bri').encode('utf-8')
 
         if not os.path.exists(self.input_bam_path):
-            raise ValueError("Bam file does not exist")
+            raise FileNotFoundError("Bam file does not exist")
 
     def create(self):
         """ Create bri index for bam file by calling bam_read_idx_build and bam_read_idx_save. Index is immediately

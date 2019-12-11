@@ -24,8 +24,8 @@ with io.open(os.path.join(ROOT, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name="camembert",
-    packages=["camembert"],
+    name='camembert',
+    packages=['camembert'],
     version=get_version(),
     description='Python interface to BRI (Bam Read Index)',
     long_description=long_description,
