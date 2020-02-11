@@ -3,12 +3,6 @@ import unittest
 
 import camembert
 
-try:
-    FileNotFoundError
-except NameError:  # Python2 compat
-    # noinspection PyShadowingBuiltins
-    FileNotFoundError = IOError
-
 DATADIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 SAMPLE_BAM = os.path.join(DATADIR, 'example_no_seq_in_header.bam')
 SAMPLE_BRI = SAMPLE_BAM + '.bri'
@@ -24,14 +18,14 @@ class BriTestCase(unittest.TestCase):
         del self.bri
 
     def test_no_bam(self):
-        self.assertRaises(FileNotFoundError, camembert.Bri, 'does_not_exist.bam')
+        self.assertRaises(IOError, camembert.Bri, 'does_not_exist.bam')
 
     def test_build(self):
         self.bri.create()
         self.assertTrue(os.path.exists(SAMPLE_BRI))
 
     def test_load_no_index(self):
-        self.assertRaises(FileNotFoundError, self.bri.load)
+        self.assertRaises(IOError, self.bri.load)
 
     def test_load(self):
         self.bri.create()

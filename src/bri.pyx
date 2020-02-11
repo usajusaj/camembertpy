@@ -1,7 +1,8 @@
 #cython: language_level=3
 
-from pysam import AlignmentFile
 import os
+
+from pysam import AlignmentFile
 
 __all__ = ['Bri']
 
@@ -20,8 +21,8 @@ cdef extern from "bri_index.h":
     void bam_read_idx_destroy(bam_read_idx* bri)
 
 cdef extern from "bri_get.h":
-    void bam_read_idx_get_range(const bam_read_idx*bri,
-                                const char*readname,
+    void bam_read_idx_get_range(const bam_read_idx* bri,
+                                const char* readname,
                                 bam_read_idx_record** start,
                                 bam_read_idx_record** end)
 
@@ -49,7 +50,7 @@ cdef class Bri:
         self.input_bri_path = (input_bam + '.bri').encode('utf-8')
 
         if not os.path.exists(self.input_bam_path):
-            raise FileNotFoundError("Bam file does not exist")
+            raise IOError("Bam file does not exist")
 
     def create(self):
         """ Create bri index for bam file by calling bam_read_idx_build and bam_read_idx_save. Index is immediately
@@ -62,7 +63,7 @@ cdef class Bri:
         """ Load the index from .bri file """
         if not os.path.exists(self.input_bri_path):
             # Avoid exit() calls in bri_index.c
-            raise FileNotFoundError("Bri file does not exist")
+            raise IOError("Bri file does not exist")
 
         self.index = bam_read_idx_load(self.input_bam_path)  # load .bri index
         self.hts = AlignmentFile(self.input_bam_path, 'rb')  # load .bam file
