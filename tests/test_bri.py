@@ -3,6 +3,12 @@ import unittest
 
 import camembert
 
+try:
+    FileNotFoundError
+except NameError:  # Python2 compat
+    # noinspection PyShadowingBuiltins
+    FileNotFoundError = IOError
+
 DATADIR = os.path.abspath(os.path.join(os.path.dirname(__file__), 'data'))
 SAMPLE_BAM = os.path.join(DATADIR, 'example_no_seq_in_header.bam')
 SAMPLE_BRI = SAMPLE_BAM + '.bri'
