@@ -74,7 +74,8 @@ setup(
             sources=[
                 "src/bri.pyx",
                 os.path.join(BRI, 'bri_index.c'),
-                os.path.join(BRI, 'bri_get.c')
+                os.path.join(BRI, 'bri_get.c'),
+                os.path.join(BRI, 'bri_benchmark.c')
             ],
             include_dirs=pysam.get_include() + [
                 BRI,

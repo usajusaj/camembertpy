@@ -4,3 +4,5 @@ dist/
 .idea/
 *.so
 src/bri.c
+.ipynb_checkpoints/
+*.o

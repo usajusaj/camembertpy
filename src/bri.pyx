@@ -4,7 +4,7 @@ import os
 
 from pysam import AlignmentFile
 
-__all__ = ['Bri']
+__all__ = ['Bri', 'bench']
 
 """
     Expose bare minimum from jts/bri headers
@@ -25,6 +25,12 @@ cdef extern from "bri_get.h":
                                 const char* readname,
                                 bam_read_idx_record** start,
                                 bam_read_idx_record** end)
+
+cdef extern from "bri_benchmark.h":
+    int bam_read_idx_benchmark_main(int argc, char** argv)
+
+def bench(input_bam):
+    bam_read_idx_benchmark_main(2, ['benchmark', input_bam.encode('utf-8')])
 
 cdef class Bri:
     """ Wrapper class for Jared's bri, supports creating and reading .bri index and extracting reads using pysam
