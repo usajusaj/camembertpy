@@ -1,3 +1,5 @@
+![Python package](https://github.com/usajusaj/camembertpy/workflows/Python%20package/badge.svg)
+
 # camembertpy
 
 Cython wrapper for https://github.com/jts/bri with pysam integration.
