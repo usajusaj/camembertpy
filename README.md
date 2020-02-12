@@ -1,10 +1,14 @@
 ![Python package](https://github.com/usajusaj/camembertpy/workflows/Python%20package/badge.svg)
-
+![Python package build and publish](https://github.com/usajusaj/camembertpy/workflows/Python%20package%20build%20and%20publish/badge.svg)
 # camembertpy
 
 Cython wrapper for https://github.com/jts/bri with pysam integration.
 
 # Installation
+## From pip repository
+```bash
+pip install camembert-bri
+```
 ## From source
 ### conda approach (recommended)
 ```bash
